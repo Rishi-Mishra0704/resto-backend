@@ -9,14 +9,14 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Now you can import the variables
-const { PORT, DB_URL } = process.env;
+const { PORT, MONGO_URI } = process.env;
 
-// Use PORT and DB_URL as needed in your module
+// Use PORT and MONGO_URI as needed in your module
 
 const app = express();
 
 mongoose
-  .connect(DB_URL, {
+  .connect(MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
