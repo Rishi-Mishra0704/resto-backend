@@ -1,10 +1,17 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-// import { body, validationResult } from "express-validator";
-import { DB_URL, PORT } from "./config.js";
 import { Meal } from "./models/meals.js"; // Import the Meal model
 import { Order } from "./models/orders.js"; // Import the Order model
+import dotenv from 'dotenv';
+
+// Load environment variables from the .env file
+dotenv.config();
+
+// Now you can import the variables
+const { PORT, DB_URL } = process.env;
+
+// Use PORT and DB_URL as needed in your module
 
 const app = express();
 
