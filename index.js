@@ -1,22 +1,41 @@
-import express from 'express'
-import cors from 'cors'
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import { DB_URL, PORT } from './config.js';
+import { Meal } from './models/meals.js'; // Import the Meal model
 
-// Initialize express
-const app = express()
+const app = express();
 
+mongoose
+  .connect(DB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  });
 
-// Middlewares
-app.use(cors())
-app.use(express.json())
+const db = mongoose.connection;
 
+db.on("error", console.error.bind(console, "Connection error: "));
+db.once("open", () => {
+  console.log("Database connected");
+});
 
-// Routes
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
+app.use(cors());
+app.use(express.json());
 
+// Define a route to retrieve all meals
+app.get('/meals', async (req, res) => {
+  try {
+    // Query the database to retrieve all meal documents
+    const meals = await Meal.find({});
+    res.json(meals);
+  } catch (err) {
+    console.error("Error fetching meals:", err);
+    res.status(500).json({ error: "Unable to fetch meals" });
+  }
+});
 
-// Start server
-app.listen(3000, () => {
-    console.log('Server on port 3000')
-})
